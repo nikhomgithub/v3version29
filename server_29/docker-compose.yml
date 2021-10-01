@@ -1,0 +1,37 @@
+version: '3'
+services:
+  server_29:
+    container_name: myserver_29
+    build: ./server
+    ports:
+      - '3005:3005'
+    environment:
+      - MONGO_URI=mongodb://mongo_29:27021/fp
+      - AUTH_MONGO_URI=mongodb://mongo_auth_v3:27025/v3
+      - PORT=3005
+      - JWT_SECRET=jwtSecret
+      - CONFIRM_PASSWORD=server_29
+      - AUTH_CONNECTION=true
+    volumes:
+      - ./server/p29upload:/usr/src/app/p29upload
+      - ../controllers:/usr/src/app/controllers
+      - ../middleware:/usr/src/app/middleware
+      - ./server/routes:/usr/src/app/routes
+      - ./server/data/backupData:/usr/src/app/data/backupData
+      - ./server/data/initData:/usr/src/app/data/initData
+      - ./server/data/restoreData:/usr/src/app/data/restoreData
+    links:
+      - mongo_29
+  mongo_29:
+    container_name: mymongo_29
+    command: mongod --port 27021 --dbpath /data/db --bind_ip mongo_29
+    image: mongo
+    ports:
+      - '27021:27021'
+    volumes:
+      - ./mongo/mydb:/data/db
+
+networks: 
+  default: 
+    external: 
+      name: external-network-v3

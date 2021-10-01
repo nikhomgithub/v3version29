@@ -1,0 +1,36 @@
+version: '3'
+services:
+  server_auth_v3:
+    container_name: myserver_auth_v3
+    build: ./server
+    ports:
+      - '3001:3001'
+    environment:
+      - MONGO_URI=mongodb://mongo_auth_v3:27025/v3
+      - PORT=3001
+      - JWT_SECRET=jwtSecret
+      - CONFIRM_PASSWORD=server_auth
+      - AUTH_CONNECTION=false
+    volumes:
+      - ./server/upload:/usr/src/app/upload
+      - ../controllers:/usr/src/app/controllers
+      - ../middleware:/usr/src/app/middleware
+      - ./server/routes:/usr/src/app/routes
+      - ./server/data/backupData:/usr/src/app/data/backupData
+      - ./server/data/initData:/usr/src/app/data/initData
+      - ./server/data/restoreData:/usr/src/app/data/restoreData
+    links:
+      - mongo_auth_v3
+  mongo_auth_v3:
+    container_name: mymongo_auth_v3
+    command: mongod --port 27025 --dbpath /data/db --bind_ip mongo_auth_v3
+    image: mongo
+    ports:
+      - '27025:27025'
+    volumes:
+      - ./mongo/mydb:/data/db
+
+networks: 
+  default: 
+    external: 
+      name: external-network-v3

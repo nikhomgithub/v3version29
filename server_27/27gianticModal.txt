@@ -1,0 +1,301 @@
+const BasicDataSchema = new Schema({
+    id:{type: Number,required:true}, // ไอดี
+    title:{type:[String]}, // คำนำหน้า
+    unit:{type:[String]}, // หน่วย
+    userLevel:{type:[String]}, // ระดับผู้ใช้
+    //transactionType:{type:[String]}, // ประเภทเอกสาร
+    //transactionStatus:{type:[String]}, // สถานะเอกสาร
+
+    effectStock:{type:[String]},// กระทบสต็อก
+    effectOrder:{type:[String]},// กระทบจอง
+    effectPlan:{type:[String]},//  กระทบแผน
+
+    userId:{teyp:String},
+    shopId:{type:String,required:true}, //
+    
+    //partnerType:{type:[String]}, // ประเภทคู่ค้า
+    routeAuth:{type:[{
+        id:{type:Number}, //ไอดี
+        routeAddress:{type:String}, // เราท์แอดเดรส
+        routeName:{type:String}, // เราท์เนม
+        userLevel:{type:[String]} // ระดับผู้ใช้
+    }],'default':[]}
+});
+//-------------------------------------
+const GroupSchema = new Schema({
+    id:{type:Number,required:true}, //ไอดีกลุ่ม
+    groupName: {type: String,required:true}, //ชื่อกลุ่ม 
+    children:{type:[Number]}, //กลุ่มย่อย
+    parentId:{type:Number}, //ไอดีกลุ่มแม่
+
+    userId:{type:String},
+    shopId:{type:String,required:true},
+});
+//--------------------------------------
+const PartnerGroupSchema = new Schema({
+    id:{type:Number,required:true}, //ไอดีกลุ่ม
+    groupName: {type: String,required:true}, //ชื่อกลุ่ม 
+    children:{type:[Number]}, //กลุ่มย่อย
+    parentId:{type:Number}, //ไอดีกลุ่มแม่
+
+    userId:{type:String},
+    shopId:{type:String,required:true},
+});
+//---------------------------------------
+const PartnerSchema = new Schema({
+    id:{type:Number,required:true}, //ไอดี
+    title:{type:String}, // คำนำหน้า
+    name:{type:String}, // ชื่อ 
+    phone:{type:[String]}, // โทรศัพท์
+    groupId: {type: Number}, // ไอดีประเภทคู่ค้า
+    groupName: {type:String}, // ชื่อกลุ่มประเภทคู่ค้า
+    //partnerType:{type:String}, // ประเภทคู่ค้า  
+    address:{  // ที่อยู่
+        type: [{
+            number:{type:String}, // เลขที่
+            tambon:{type:String}, // ตำบล แขวง 
+            district:{type:String}, // อำเภอ เขต 
+            province:{type:String}, // จังหวัด
+            postcode:{type:String} // รหัสไปรษณีย์
+        }],        
+    },
+    photoUrl1:{type:[String]},
+    remark:{type:String}, // หมายเหตุ
+
+    userId:{type:String},
+    shopId:{type:String,required:true},
+});
+//--------------------------------------------
+
+const ProductSchema = new Schema({
+    id:{type:Number,required:true}, // ไอดี
+    barcode:{type:String}, // บาร์โค้ด
+    name:{type:String}, // ชื่อ
+    groupId: {type: Number}, // ไอดีกลุ่ม
+    groupName: {type:String}, // ชื่อกลุ่ม
+    photoUrl1:{type:[String]}, // 
+    unit:{type:String},  // หน่วย
+    price:{ type:Number}, // ราคา
+    remark:{type:String}, // หมายเหตุ
+    
+    userId:{type:String},
+    shopId:{type:String,required:true}, //
+    
+    isRawMat:{type:Boolean}, //เป็นวัตถุดิบ
+    detail:{ // รายละเอียด
+        type:[{
+            id:{type:Number}, // ไอดี
+            barcode:{type:String}, // บาร์โค้ด
+            name:{type:String}, // ชื่อ
+            groupId:{type:Number}, // ไอดีกลุ่ม
+            groupName:{type:String}, // ชื่อกลุ่ม
+            unit:{type:String}, // หน่วย
+            price:{type:Number}, // ราคา 
+            quantity:{type:Number}, // จำนวน 
+            result:{type:Number},
+            remark:{type:String}, //หมายเหตุ
+            isRawMat:{type:Boolean} // เป็นวัตถุดิบ
+        }]
+    },
+    stock:{type:Number,default:0}, // ยอดสต็อค
+    order:{type:Number,default:0}, // ยอดจอง
+    plan:{type:Number,default:0} //ยอดแผน
+
+});
+//----------------------------------
+const ShopSchema = new Schema({
+
+/*1*/    shopName: {type: String},//input  ชื่อร้าน 
+         //shopName: {type: String,required: true,unique:true}
+/*2*/    password:{type:String},//input  รหัส 
+/*3*/    active:{type:Boolean},//autogen by mongo
+/*4*/    code:{type:String},//autogen by node
+         //uuid.v4()   
+/*5*/    dateIn:{type:Date},
+         //new Date().toISOString()
+         //2020-12-30T12:40:20.964Z
+
+/*6*/    ownerName:{type:String},//input ชื่อเจ้าของ 
+         //ownerName:{type:String,required:true,unique:true}
+/*7*/    ownerPassword:{type:String},//input รหัส
+/*8*/    ownerActive:{type:Boolean},//autogen by mongo
+/*9*/    ownerCode:{type:String},//autogen by node 
+    
+/*10*/   ownerEmail:{type:String}, //อีเมลเจ้าของ
+});
+
+//---------------------------------------
+const TableTemplateSchema = new Schema({
+    //id:{type:Number,required:true}, //ไอดีกลุ่ม
+    tableName:{type:String},
+    id:{type:Number,required:true},//userId
+    shopId:{type:String,required:true},
+    template:{
+        type:[
+            {
+                colName:{type:String},
+                lb:{type:String}, // 
+                type:{type:String}, //  
+                width:{type:String}, //  
+                showCol:{type:Boolean}, // 
+                showColHead:{type:Boolean}, // 
+                showSum:{type:Boolean}
+            }
+        ]
+       
+    },        
+});
+//=--------------------------------
+const TransactionGroupSchema = new Schema({
+    id:{type:Number,required:true}, //ไอดีกลุ่ม
+    groupName: {type: String,required:true}, //ชื่อกลุ่ม 
+    children:{type:[Number]}, //กลุ่มย่อย
+    parentId:{type:Number}, //ไอดีกลุ่มแม่
+
+    userId:{type:String},
+    shopId:{type:String,required:true},
+
+    effectStock:{type:String},
+    effectOrder:{type:String},
+    effectPlan:{type:String},
+
+    transactionType:{type:String},
+});
+//------------------------------------------
+const TransactionSchema = new Schema({
+    id:{type:Number,required:true}, // ไอดี
+    date:{type:Date}, // วันที่
+    //new Date().toISOString()
+    //2020-12-30T12:40:20.964Z
+
+    groupName:{type:String}, // ชื่อเอกสาร
+    groupId:{type:Number}, // รหัสเอกสาร
+
+    //status:{type:String},  // สถานะเอกสาร open,close,delete
+    //transactionType:{type:String}, // ประเภทเอกสาร
+
+    effectStock:{type:String}, // กระทบสต็อก
+    effectOrder:{type:String}, // กระทบจอง
+    effectPlan:{type:String}, // กระทบแผน
+
+    photoUrl1:{type:[String]}, //
+
+    partnerId:{type:Number}, // ไอดีคู่ค้า
+    title:{type:String}, // คำนำหน้า
+    name:{type:String}, // ชื่อ
+    phone:{type:[String]}, // โทรศัพท์ 
+   
+    address:{  // ที่อยู่
+        type: [{
+            number:{type:String}, // เลขที่
+            tambon:{type:String}, // ตำบล แขวง 
+            district:{type:String}, // อำเภอ เขต 
+            province:{type:String}, // จังหวัด
+            postcode:{type:String} // รหัสไปรษณีย์
+        }],        
+    },
+
+    remark:{type:String}, // หมายเหตุ
+
+    userId:{type:String},
+    shopId:{type:String,required:true}, //
+
+    total:{type:Number}, // รวม
+    reduction:{type:Number}, // ส่วนลด
+    grandTotal:{type:Number}, // สุทธิ
+
+    detail:{   // รายละเอียด
+        type: [{
+            id:{type:Number}, // ไอดี
+            barcode:{type:String}, // บาร์โค้ด
+            name:{type:String}, // ชื่อ
+            groupId:{type:Number}, // ไอดีกลุ่ม
+            groupName:{type:String}, // ชื่อกลุ่ม
+            unit:{type:String}, // หน่วย
+            price:{type:Number}, // ราคา 
+            quantity:{type:Number}, // จำนวน 
+            result:{type:Number},
+            remark:{type:String}, //หมายเหตุ
+            isRawMat:{type:Boolean} // เป็นวัตถุดิบ
+        }],        
+    }
+});
+//--------------------------------------
+const TransactionLogSchema = new Schema({
+    id:{type:Number,required:true}, // ไอดี
+    date:{type:Date}, // วันที่
+    //new Date().toISOString()
+    //2020-12-30T12:40:20.964Z
+
+    groupName:{type:String}, // ชื่อเอกสาร
+    groupId:{type:Number}, // รหัสเอกสาร
+
+    //status:{type:String},  // สถานะเอกสาร open,close,delete
+    //transactionType:{type:String}, // ประเภทเอกสาร
+
+    effectStock:{type:String}, // กระทบสต็อก
+    effectOrder:{type:String}, // กระทบจอง
+    effectPlan:{teyp:String}, // กระทบแผน
+
+    photoUrl1:{type:[String]}, //
+
+    partnerId:{type:Number}, // ไอดีคู่ค้า
+    title:{type:String}, // คำนำหน้า
+    name:{type:String}, // ชื่อ
+    phone:{type:[String]}, // โทรศัพท์ 
+   
+    address:{  // ที่อยู่
+        type: [{
+            number:{type:String}, // เลขที่
+            tambon:{type:String}, // ตำบล แขวง 
+            district:{type:String}, // อำเภอ เขต 
+            province:{type:String}, // จังหวัด
+            postcode:{type:String} // รหัสไปรษณีย์
+        }],        
+    },
+
+    remark:{type:String}, // หมายเหตุ
+
+    userId:{type:String},
+    shopId:{type:String,required:true}, //
+
+    total:{type:Number}, // รวม
+    reduction:{type:Number}, // ส่วนลด
+    grandTotal:{type:Number}, // สุทธิ
+
+    status:{type:String},// ["open","close","delete"]
+    detail:{   // รายละเอียด
+        type: [{
+            id:{type:Number}, // ไอดี
+            barcode:{type:String}, // บาร์โค้ด
+            name:{type:String}, // ชื่อ
+            groupId:{type:Number}, // ไอดีกลุ่ม
+            groupName:{type:String}, // ชื่อกลุ่ม
+            unit:{type:String}, // หน่วย
+            price:{type:Number}, // ราคา 
+            quantity:{type:Number}, // จำนวน 
+            result:{type:Number},
+            remark:{type:String}, //หมายเหตุ
+            isRawMat:{type:Boolean} // เป็นวัตถุดิบ
+        }],        
+    }
+});
+//---------------------------------
+const UserSchema = new Schema({
+    
+/*1*/     id:{type:Number,required:true}, // ไอดี
+/*2*/     username:{type:String,required:true}, // ชื่อผู้ใช้ 
+/*3*/     password:{type:String,required:true}, // รหัส 
+/*4*/     active:{type:Boolean,required:true}, // 
+/*5*/     code:{type:String,required:true}, //
+          //uuid.v4()   
+/*6*/     userLevel:{type:String,required:true}, // ระดับผู้ใช้
+
+/*7*/     shopId:{type:String,required:true}, // 
+/*8*/     dateIn:{type:Date,required:true}, //
+          //new Date().toISOString()
+          //2020-12-30T12:40:20.964Z
+/*9*/     name:{type:String}, // ชื่อ
+/*10*/    surname:{type:String}, // สกุล
+
+});

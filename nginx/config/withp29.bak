@@ -1,0 +1,195 @@
+upstream project_auth{
+    server server_auth_v3:3001;
+}
+
+upstream project_fp{
+    server server_1:3002;
+}
+
+upstream project_p25{
+    server server_25:3003;
+}
+
+upstream project_p27{
+    server server_27:3004;
+}
+
+upstream project_p29{
+    server server_29:3005;
+}
+
+#upstream project{ server server_vrpjob:3001; }
+#upstream project2{ server serversugar25:3002; }
+#upstream project3{ server serversugar27:3003; }
+
+server {
+    listen       80;
+    listen  [::]:80;
+
+    #server_name vrpshop.net www.vrpshop.net;
+    server_name  localhost;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+    root   /usr/share/nginx/html/;
+    index index.html;
+    
+    location / {
+        rewrite ^/$ /home;
+    }
+
+    location /home {
+        root   /usr/share/nginx/html;
+        try_files $uri $uri/ =404;
+    }
+
+    #location ~ /home/id {
+    #    types {}
+    #    default_type text/html;
+    #    alias /usr/share/nginx/html/home/index.html;
+    #}
+
+    #location /oldpage {
+    #    root   /usr/share/nginx/html;
+    #    try_files $uri $uri/ =404;
+    #}
+
+    location /fp {
+        root   /usr/share/nginx/html;
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /fp/(shop|user|basicdata|job) {
+        ##rewrite ^/oldpage/(shop|user|basicdata|job)$ /oldpage;
+        types {}
+        default_type text/html;
+        alias /usr/share/nginx/html/fp/index.html;
+    }
+
+    location /p25 {
+        root   /usr/share/nginx/html;
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /p25/(shop|user|basicdata|job|customer|tabletemplate|know|sticker) {
+        ##rewrite ^/oldpage/(shop|user|basicdata|job)$ /oldpage;
+        types {}
+        default_type text/html;
+        alias /usr/share/nginx/html/p25/index.html;
+    }
+
+    location /p27 {
+        root   /usr/share/nginx/html;
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /p27/(shop|user|basicdata|partner|tabletemplate|group|product|transaction|transactionlog) {
+        ##rewrite ^/oldpage/(shop|user|basicdata|job)$ /oldpage;
+        types {}
+        default_type text/html;
+        alias /usr/share/nginx/html/p27/index.html;
+    }
+
+    location /geo {
+        root   /usr/share/nginx/html;
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /geo/(calculator|test) {
+        ##rewrite ^/oldpage/(shop|user|basicdata|job)$ /oldpage;
+        types {}
+        default_type text/html;
+        alias /usr/share/nginx/html/geo/index.html;
+    }
+    #location /newpage {
+    #    root   /usr/share/nginx/html;
+    #    try_files $uri $uri/ =404;
+    #}
+
+    #location ~ /newpage/(shop|user|basicdata|job|customer) {
+        ##rewrite ^/newpage/(shop|user|basicdata|job|customer)$ /newpage;
+    #    types {}
+    #    default_type text/html;
+    #    alias /usr/share/nginx/html/newpage/index.html;
+    #}
+    
+    location /yahoo {
+        proxy_pass http://www.yahoo.com;
+    }
+    location /test { proxy_pass http://project_auth; }
+    location /upload { proxy_pass http://project_auth; }
+    
+    location /shop { proxy_pass http://project_auth; }
+    location /user { proxy_pass http://project_auth; }
+    
+    location /vrp1get { proxy_pass http://project_auth; }
+    location /vrp2get { proxy_pass http://project_auth; }
+    location /vrp3get { proxy_pass http://project_auth; }
+    location /vrp4get { proxy_pass http://project_auth; }
+
+    location /vrp1rec { proxy_pass http://project_auth; }
+    location /vrp2rec { proxy_pass http://project_auth; }
+    location /vrp3rec { proxy_pass http://project_auth; }
+    location /vrp4rec { proxy_pass http://project_auth; }
+
+    #-------------------------------------------------
+    location /fptest { proxy_pass http://project_fp; }
+    location /fpupload { proxy_pass http://project_fp; }
+
+    location /fpshop { proxy_pass http://project_fp; }
+    location /fpuser { proxy_pass http://project_fp; }
+    location /fpbasicdata { proxy_pass http://project_fp; }
+    location /fpjob { proxy_pass http://project_fp; }
+
+    #-------------------------------------------------
+    
+    location /p25test { proxy_pass http://project_p25; }
+    location /p25upload { proxy_pass http://project_p25; }
+    
+    location /p25shop { proxy_pass http://project_p25; }
+    location /p25user { proxy_pass http://project_p25; }
+    location /p25basicdata { proxy_pass http://project_p25; }
+    location /p25job { proxy_pass http://project_p25; }
+    location /p25customer { proxy_pass http://project_p25; }
+    location /p25tabletemplate { proxy_pass http://project_p25; }
+    location /p25know { proxy_pass http://project_p25; }
+
+
+    location /p27test { proxy_pass http://project_p27; }
+    location /p27upload { proxy_pass http://project_p27; }
+
+    location /p27shop { proxy_pass http://project_p27; }
+    location /p27user { proxy_pass http://project_p27; }
+
+    location /p27basicdata { proxy_pass http://project_p27; }
+    location /p27tabletemplate { proxy_pass http://project_p27; }
+    location /p27group { proxy_pass http://project_p27; }
+    location /p27product { proxy_pass http://project_p27; }
+    location /p27partner { proxy_pass http://project_p27; }
+    location /p27transaction { proxy_pass http://project_p27; }
+    location /p27transactionlog { proxy_pass http://project_p27; }
+
+
+    location /p29test { proxy_pass http://project_p29; }
+    location /p29upload { proxy_pass http://project_p29; }
+
+    location /p29shop { proxy_pass http://project_p29; }
+    location /p29user { proxy_pass http://project_p29; }
+
+    location /p29basicdata { proxy_pass http://project_p29; }
+    location /p29tabletemplate { proxy_pass http://project_p29; }
+    location /p29group { proxy_pass http://project_p29; }
+    location /p29product { proxy_pass http://project_p29; }
+    location /p29partner { proxy_pass http://project_p29; }
+    location /p29transaction { proxy_pass http://project_p29; }
+    location /p29transactionlog { proxy_pass http://project_p29; }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+}
+
+
+
+

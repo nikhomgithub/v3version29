@@ -1,0 +1,37 @@
+version: '3'
+services:
+  server_25:
+    container_name: myserver_25
+    build: ./server
+    ports:
+      - '3003:3003'
+    environment:
+      - MONGO_URI=mongodb://mongo_25:27019/fp
+      - AUTH_MONGO_URI=mongodb://mongo_auth_v3:27025/v3
+      - PORT=3003
+      - JWT_SECRET=jwtSecret
+      - CONFIRM_PASSWORD=server_25
+      - AUTH_CONNECTION=true
+    volumes:
+      - ./server/p25upload:/usr/src/app/p25upload
+      - ../controllers:/usr/src/app/controllers
+      - ../middleware:/usr/src/app/middleware
+      - ./server/routes:/usr/src/app/routes
+      - ./server/data/backupData:/usr/src/app/data/backupData
+      - ./server/data/initData:/usr/src/app/data/initData
+      - ./server/data/restoreData:/usr/src/app/data/restoreData
+    links:
+      - mongo_25
+  mongo_25:
+    container_name: mymongo_25
+    command: mongod --port 27019 --dbpath /data/db --bind_ip mongo_25
+    image: mongo
+    ports:
+      - '27019:27019'
+    volumes:
+      - ./mongo/mydb:/data/db
+
+networks: 
+  default: 
+    external: 
+      name: external-network-v3

@@ -1,0 +1,37 @@
+version: '3'
+services:
+  server_1:
+    container_name: myserver_1
+    build: ./server
+    ports:
+      - '3002:3002'
+    environment:
+      - MONGO_URI=mongodb://mongo_1:27018/fp
+      - AUTH_MONGO_URI=mongodb://mongo_auth_v3:27025/v3
+      - PORT=3002
+      - JWT_SECRET=jwtSecret
+      - CONFIRM_PASSWORD=server_1
+      - AUTH_CONNECTION=true
+    volumes:
+      - ./server/fpupload:/usr/src/app/fpupload
+      - ../controllers:/usr/src/app/controllers
+      - ../middleware:/usr/src/app/middleware
+      - ./server/routes:/usr/src/app/routes
+      - ./server/data/backupData:/usr/src/app/data/backupData
+      - ./server/data/initData:/usr/src/app/data/initData
+      - ./server/data/restoreData:/usr/src/app/data/restoreData
+    links:
+      - mongo_1
+  mongo_1:
+    container_name: mymongo_1
+    command: mongod --port 27018 --dbpath /data/db --bind_ip mongo_1
+    image: mongo
+    ports:
+      - '27018:27018'
+    volumes:
+      - ./mongo/mydb:/data/db
+
+networks: 
+  default: 
+    external: 
+      name: external-network-v3

@@ -1,0 +1,6 @@
+# m h  dom mon dow   command
+  0 0  11  DEC,MAR,JUN,SEP,DEC * 
+
+  JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC 
+  1   2   3   4   5   6   7   8   9   10  11  12
+          z           z           z           z
